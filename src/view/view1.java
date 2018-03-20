@@ -1,7 +1,14 @@
-
 package view;
+
 import model.empresa;
 import controller.empresaController;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class view1 extends javax.swing.JFrame {
 
@@ -10,10 +17,16 @@ public class view1 extends javax.swing.JFrame {
      */
     public view1() {
         initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+        cargar_datos();
+        emco.admintabla(jTable1);
+        emco.admintabla(jTable2);
+
     }
     empresaController emco = new empresaController();
     int num;
-   
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -49,12 +62,15 @@ public class view1 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel1(evt);
+            }
+        });
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Nombre", "Servicio", "Direccion", "NIT"
@@ -143,10 +159,7 @@ public class view1 extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Nombre", "Servicio", "Direccion", "NIT"
@@ -287,34 +300,76 @@ public class view1 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegidtrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegidtrarActionPerformed
-        emco.create(new empresa (txtNombreReg.getText() , txtNombreSer.getText() , txtNombreDir.getText() , txtNombreNit.getText() ));
+        emco.create(new empresa(txtNombreReg.getText(), txtNombreSer.getText(), txtNombreDir.getText(), txtNombreNit.getText()));
         emco.admintabla(jTable1);
-        emco.tabla2(jTable2);
+        emco.admintabla(jTable2);
+        try {
+            FileOutputStream persisten = new FileOutputStream("valores1.dat");
+            ObjectOutputStream obj_persiten = new ObjectOutputStream(persisten);
+            obj_persiten.writeObject(emco.getLista_empresa());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error-2");
+        }
+
+
     }//GEN-LAST:event_btnRegidtrarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        emco.update(new empresa(txtNombre.getText() , txtServer.getText() , txtDrec.getText() , txtNit.getText()), num);
-        emco.tabla2(jTable2);
-        
+        emco.update(new empresa(txtNombre.getText(), txtServer.getText(), txtDrec.getText(), txtNit.getText()), num);
+        emco.admintabla(jTable2);
+        vaciar_modif();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
         num = jTable2.getSelectedRow();
+        jCheckBox1.setSelected(true);
+
+        txtNombre.setText(emco.read(num).getNombre());
+        txtServer.setText(emco.read(num).getServicio());
+        txtNit.setText(emco.read(num).getNit());
+        txtDrec.setText(emco.read(num).getDireccion());
+
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         emco.delete(num);
-        emco.tabla2(jTable2);
+        emco.admintabla(jTable2);
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    public void cargar_datos() {
+        File fichero = new File("valores1.dat");
+
+        if (fichero.exists()) {
+            try {
+                FileInputStream persisten = new FileInputStream("valores1.dat");
+                ObjectInputStream obj_persisten = new ObjectInputStream(persisten);
+                emco.setLista_empresa((ArrayList<empresa>) obj_persisten.readObject());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ha ocurrido un error");
+            }
+        }
+
+    }
+
+    public void vaciar_modif() {
+        txtNombre.setText(null);
+        txtServer.setText("");
+        txtNit.setText(null);
+
+        txtDrec.setText("");
+    }
+
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
-    
+    private void panel1(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel1
+        emco.admintabla(jTable1);
+        emco.admintabla(jTable2);
+    }//GEN-LAST:event_panel1
+
     public static void main(String args[]) {
-        
-       
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new view1().setVisible(true);

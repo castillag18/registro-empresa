@@ -35,6 +35,12 @@ public class empresaController {
         return lista_empresa;
     }
 
+    public void setLista_empresa(ArrayList<empresa> lista_empresa) {
+        this.lista_empresa = lista_empresa;
+    }
+    
+    
+
     public void admintabla(javax.swing.JTable jTable1) {
         Object[][] matriz = new Object[lista_empresa.size()][4];
         for (int i = 0; i < lista_empresa.size(); i++) {
@@ -45,7 +51,7 @@ public class empresaController {
             matriz[i][3] = lista_empresa.get(i).getDireccion();
 
         }
-        
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 matriz,
                 new String[]{
@@ -67,45 +73,6 @@ public class empresaController {
             jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(3).setResizable(false);
         }
-    }   
-        
- 
-    public void tabla2 (javax.swing.JTable jTable2) {
-        Object[][] matriz = new Object[lista_empresa.size()][4];
-        for (int i = 0; i < lista_empresa.size(); i++) {
-            
-            matriz[i][0] = lista_empresa.get(i).getNombre();
-            matriz[i][1] = lista_empresa.get(i).getServicio();
-            matriz[i][2] = lista_empresa.get(i).getNit();
-            matriz[i][3] = lista_empresa.get(i).getDireccion();
-            
-        }
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-               matriz,
-                new String[]{
-                    "Nombre", "Servicio", "Direccion", "NIT"
-                }
-        ) {
-            boolean[] canEdit = new boolean[]{
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit[columnIndex];
-            }
-        });
-
-       
-
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setResizable(false);
-            jTable2.getColumnModel().getColumn(2).setResizable(false);
-            jTable2.getColumnModel().getColumn(3).setResizable(false);
-        }
-        
     }
-
-
 
 }
